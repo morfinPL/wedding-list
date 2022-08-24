@@ -38,8 +38,12 @@ def create_button_callback(*args, **kwargs):
     if reserver:
         gift_manager.create_gift_reservation(gift_idea, reserver)
         st.success(
+            f'Rezerwacja prezentu: {gift_idea} dla rezerwującego: {reserver} została dodana!')
+        st.success(
             f'Reservation for gift: {gift_idea} and reserver: {reserver} added successfully!')
     else:
+        st.warning(
+            'Musisz podać email rezerwującego, żeby zrobić rezerwację!')
         st.warning(
             'You need to provide the reserver email address to make reservation!')
 
@@ -48,26 +52,32 @@ def remove_button_callback(*args, **kwargs):
     gift_manager, gift_idea, reserver = args
     if not gift_manager.remove_gift_reservation(gift_idea, reserver):
         st.warning(
+            f'Rezerwacja dla prezentu: {gift_idea} oraz rezerwującego: {reserver} nie istnieje!')
+        st.warning(
             f'Reservation for gift: {gift_idea} and reserver: {reserver} does not exist!')
     else:
+        st.success(
+            f'Rezerwacja dla prezentu: {gift_idea} oraz rezerwujacego: {reserver} została usunięta!')
         st.success(
             f'Reservation for gift: {gift_idea} and reserver: {reserver} removed successfully!')
 
 
 def main():
-    st.header('Martyna & Filip wedding gift list')
+    st.header('Martyna & Filip - lista prezentów - wedding gift list')
 
     gift_manager = get_gift_manager()
 
     reserver = st.text_input(
-        label='Email of reserver',
+        label='Email rezerwującego - '
+        'Email of reserver',
         placeholder='nick@foo.com',
-        help='Please enter your email address to make or remove gift idea reservation!')
+        help='Podaj swój adres email, żeby dodać lub usunąć rezerwację prezentu! - '
+        'Please enter your email address to make or remove gift idea reservation!')
 
     col1, col2 = st.columns(2)
 
     with col1:
-        st.header('Available gift ideas')
+        st.subheader('Dostępne pomysły na prezenty - Available gift ideas')
         for gift_idea in gift_manager.gift_ideas:
             st.button(
                 gift_idea,
@@ -78,7 +88,7 @@ def main():
                     reserver))
 
     with col2:
-        st.header('Reserved gift ideas')
+        st.subheader('Zarezerwowane pomysły na prezenty - Reserved gift ideas')
         for gift_idea in gift_manager.reserved_gift_ideas:
             st.button(
                 gift_idea,
