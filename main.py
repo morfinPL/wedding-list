@@ -66,6 +66,15 @@ def main():
     st.header('Martyna & Filip - lista prezentów - wedding gift list')
 
     gift_manager = get_gift_manager()
+    description_column_left, description_column_right = st.columns(2)
+
+    with description_column_left:
+        st.subheader('Instrukcja')
+        st.markdown('Kochani Goście, dla nas **najważniejsza jest wasza obecność!** Jeżeli mimo to chcielibyście kupić nam dodatkowo jakiś prezent to poniżej znajdziecie kilka pomysłów. Do zarezerwowania prezentu wystarczy wpisać adres email i kliknąć na prezent w lewej kolumnie. By anulować rezerwację wystarczy kliknąć zarezerwowany prezent w prawej kolumnie uprzednio wpisując adres email podany przy rezerwacji.')
+
+    with description_column_right:
+        st.subheader('Instruction')
+        st.markdown('Dear Guests, for us **the most important is your presence at our wedding!** If you want to buy a gift for us please consider the following ideas. To reserve the gift idea, specify your email address and click on the selected gift idea in the left column. To cancel your reservation you need to specify the same email address as in the reservation process and click on the gift idea in the right column.')
 
     reserver = st.text_input(
         label='Email rezerwującego - '
@@ -74,9 +83,9 @@ def main():
         help='Podaj swój adres email, żeby dodać lub usunąć rezerwację prezentu! - '
         'Please enter your email address to make or remove gift idea reservation!')
 
-    col1, col2 = st.columns(2)
+    gift_column_left, gift_column_right = st.columns(2)
 
-    with col1:
+    with gift_column_left:
         st.subheader('Dostępne pomysły na prezenty - Available gift ideas')
         for gift_idea in gift_manager.gift_ideas:
             st.button(
@@ -87,7 +96,7 @@ def main():
                     gift_idea,
                     reserver))
 
-    with col2:
+    with gift_column_right:
         st.subheader('Zarezerwowane pomysły na prezenty - Reserved gift ideas')
         for gift_idea in gift_manager.reserved_gift_ideas:
             st.button(
