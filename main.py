@@ -13,13 +13,18 @@ class GiftManager():
         self.reserved_gift_ideas: Dict[str, str] = {}
 
     def create_gift_reservation(self, gift_idea: str, reserver: str):
-        self.gift_ideas = [
-            gift_idea_elem for gift_idea_elem in self.gift_ideas if gift_idea != gift_idea_elem]
-        self.gift_ideas.sort()
-        self.reserved_gift_ideas[gift_idea] = reserver
+        if gift_idea in self.gift_ideas:
+            self.gift_ideas = [
+                gift_idea_elem for gift_idea_elem in self.gift_ideas if gift_idea != gift_idea_elem]
+            self.gift_ideas.sort()
+            self.reserved_gift_ideas[gift_idea] = reserver
+            return True
+        else:
+            return False
 
     def remove_gift_reservation(self, gift_idea: str, reserver: str):
-        if self.reserved_gift_ideas[gift_idea] == reserver:
+        if gift_idea in self.reserved_gift_ideas and self.reserved_gift_ideas[
+                gift_idea] == reserver:
             del self.reserved_gift_ideas[gift_idea]
             self.gift_ideas.append(gift_idea)
             self.gift_ideas.sort()
@@ -36,11 +41,16 @@ def get_gift_manager() -> GiftManager:
 def create_button_callback(*args, **kwargs):
     gift_manager, gift_idea, reserver = args
     if reserver:
-        gift_manager.create_gift_reservation(gift_idea, reserver)
-        st.success(
-            f'Rezerwacja prezentu: {gift_idea} dla rezerwującego: {reserver} została dodana!')
-        st.success(
-            f'Reservation for gift: {gift_idea} and reserver: {reserver} added successfully!')
+        if gift_manager.create_gift_reservation(gift_idea, reserver):
+            st.success(
+                f'Rezerwacja prezentu: {gift_idea} dla rezerwującego: {reserver} została dodana!')
+            st.success(
+                f'Reservation for gift: {gift_idea} and reserver: {reserver} added successfully!')
+        else:
+            st.warning(
+                f'Ktoś zarezerwował prezent: {gift_idea} przed Tobą!')
+            st.warning(
+                f'Someone else reserved gift: {gift_idea} before you!')
     else:
         st.warning(
             'Musisz podać email rezerwującego, żeby zrobić rezerwację!')
